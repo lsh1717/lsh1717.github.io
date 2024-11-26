@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모던 비즈니스 웹사이트</title>
+    <style>
+        /* 전역 스타일 (기본 설정) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* 모든 요소에 대해 padding과 border 포함하여 크기 설정 */
+        }
+
+        /* CSS 변수 설정 */
+        :root {
+            --primary: #2D3436; /* 기본 색상 */
+            --secondary: #7159C1; /* 보조 색상 */
+            --accent: #00B894; /* 강조 색상 */
+            --background: #F7F8FA; /* 배경 색상 */
+            --text: #2D3436; /* 기본 텍스트 색상 */
+            --light-text: #636E72; /* 밝은 텍스트 색상 */
+        }
+
+        /* 기본 바디 스타일 */
+        body {
+            font-family: 'Arial', sans-serif; /* 글꼴 설정 */
+            line-height: 1.6; /* 줄 간격 */
+            color: var(--text); /* 기본 텍스트 색상 */
+            background-color: var(--background); /* 배경 색상 */
+        }
+
+        /* 헤더 스타일 */
+        .header {
+            background: linear-gradient(135deg, #7159C1 0%, #00B894 100%); /* 그라디언트 배경 */
+            color: white; /* 텍스트 색상 */
+            padding: 6rem 2rem; /* 패딩 */
+            text-align: center; /* 중앙 정렬 */
+            position: relative; /* 상대적 위치 설정 */
+            overflow: hidden; /* 자식 요소가 부모를 넘지 않도록 설정 */
+        }
+
+        .header::before {
+            content: ''; /* 가상 요소 생성 */
+            position: absolute; /* 절대 위치 */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%); /* 반지름 그라디언트 */
+        }
+
+        /* 헤더 내 제목 스타일 */
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800; /* 두꺼운 글꼴 */
+        }
+
+        /* 헤더 내 설명 텍스트 스타일 */
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* 내비게이션 스타일 */
+        .nav {
+            background-color: rgba(255, 255, 255, 0.95); /* 배경 투명도 */
+            padding: 1rem;
+            position: sticky; /* 스크롤 시 상단에 고정 */
+            top: 0;
+            z-index: 100; /* 다른 요소들보다 위에 위치 */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* 그림자 */
+        }
+
+        /* 내비게이션 메뉴 스타일 */
+        .nav-list {
+            display: flex; /* 플렉스 박스 레이아웃 */
+            justify-content: center; /* 중앙 정렬 */
+            list-style: none; /* 목록 스타일 제거 */
+            gap: 3rem; /* 항목 간 간격 */
+        }
+
+        /* 내비게이션 링크 스타일 */
+        .nav-list a {
+            color: var(--text);
+            text-decoration: none; /* 밑줄 제거 */
+            padding: 0.5rem 1rem;
+            transition: all 0.3s; /* 부드러운 전환 효과 */
+            font-weight: 500;
+            position: relative;
+        }
+
+        /* 내비게이션 링크에 마우스를 올렸을 때의 스타일 */
+        .nav-list a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--secondary), var(--accent)); /* 그라디언트 라인 */
+            transition: width 0.3s; /* 부드러운 애니메이션 효과 */
+        }
+
+        /* 링크에 마우스를 올렸을 때 그라디언트 라인이 확장됨 */
+        .nav-list a:hover::after {
+            width: 100%;
+        }
+
+        /* 섹션 기본 스타일 */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        /* 섹션 제목 스타일 */
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            font-size: 2.5rem;
+            color: var(--primary);
+            position: relative;
+        }
+
+        /* 섹션 제목 아래의 라인 스타일 */
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, var(--secondary), var(--accent)); /* 그라디언트 라인 */
+            margin: 1rem auto;
+        }
+
+        /* About 섹션 스타일 */
+        .about {
+            background-color: white;
+        }
+
+        /* About 섹션의 내용 스타일 */
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--light-text);
+        }
+
+        /* 제품 섹션 스타일 */
+        .products {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 제품 그리드 레이아웃 */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3열로 제품 나열 */
+            gap: 2rem;
+        }
+
+        /* 개별 제품 카드 스타일 */
+        .product-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); /* 카드 그림자 */
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 제품 카드에 마우스를 올렸을 때 배경 그라디언트 스타일 */
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary), var(--accent)); /* 그라디언트 배경 */
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1;
+        }
+
+        /* 제품 카드에 마우스를 올렸을 때 카드가 약간 위로 떠 오름 */
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* 마우스를 올렸을 때 그라디언트 배경이 보임 */
+        .product-card:hover::before {
+            opacity: 0.05;
+        }
+
+        /* 제품 이미지 스타일 */
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #f6f6f6 0%, #eef2f3 100%); /* 배경 그라디언트 */
+            margin-bottom: 1.5rem;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 제품 카드 제목 스타일 */
+        .product-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        /* 제품 카드 설명 텍스트 스타일 */
+        .product-card p {
+            color: var(--light-text);
+            margin-bottom: 1.5rem;
+        }
+
+        /* 버튼 기본 스타일 */
+        .btn {
+            background: linear-gradient(to right, var(--secondary), var(--accent));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        /* 버튼에 마우스를 올렸을 때의 스타일 */
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* 그림자 효과 */
+        }
+
+        /* FAQ 섹션 스타일 */
+        .faq {
+            background-color: white;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* FAQ 항목 스타일 */
+        .faq-item {
+            background-color: var(--background);
+            margin-bottom: 1.5rem;
+            padding: 2rem;
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            /* FAQ 항목을 마우스로 호버할 때 적용되는 스타일 */
+            transform: translateX(10px); /* 호버 시 FAQ 항목이 오른쪽으로 10px 이동 */
+        }
+
+        .contact {
+            /* 'contact' 섹션 스타일: 연락처 양식 */
+            max-width: 600px; /* 최대 너비 600px */
+            margin: 0 auto; /* 중앙 정렬 */
+        }
+
+        .contact-form {
+            /* 연락처 양식의 스타일 */
+            display: grid; /* 그리드 레이아웃을 사용 */
+            gap: 1.5rem; /* 각 입력 필드 사이의 간격 */
+            background: white; /* 배경 색상 흰색 */
+            padding: 3rem; /* 패딩 */
+            border-radius: 16px; /* 둥근 모서리 */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); /* 부드러운 그림자 */
+        }
+
+        .form-group {
+            /* 각 폼 그룹의 스타일: 레이블과 입력 필드를 감싸는 그룹 */
+            display: grid; /* 그리드 레이아웃 */
+            gap: 0.5rem; /* 레이블과 입력 필드 사이의 간격 */
+        }
+
+        .form-group label {
+            /* 폼 레이블 스타일 */
+            color: var(--primary); /* 기본 색상 설정 */
+            font-weight: 500; /* 중간 두께의 글씨 */
+        }
+
+        input, textarea {
+            /* 입력 필드와 텍스트 영역에 공통 적용되는 스타일 */
+            padding: 1rem; /* 패딩 */
+            border: 2px solid #eef2f3; /* 밝은 회색 테두리 */
+            border-radius: 8px; /* 둥근 모서리 */
+            transition: all 0.3s; /* 모든 속성에 0.3초 동안의 부드러운 전환 효과 */
+            font-size: 1rem; /* 글자 크기 */
+        }
+
+        input:focus, textarea:focus {
+            /* 입력 필드나 텍스트 영역에 포커스가 갈 때 */
+            outline: none; /* 포커스 테두리 제거 */
+            border-color: var(--secondary); /* 테두리 색상을 보라색으로 변경 */
+        }
+
+        .footer {
+            /* 푸터 섹션 스타일 */
+            background: var(--primary); /* 배경 색상을 기본 색으로 설정 */
+            color: white; /* 텍스트 색상을 흰색으로 설정 */
+            text-align: center; /* 텍스트 중앙 정렬 */
+            padding: 4rem 2rem; /* 패딩 */
+            margin-top: 0; /* 상단 여백 제거 */
+        }
+
+        .footer p {
+            /* 푸터의 텍스트 스타일 */
+            opacity: 0.8; /* 텍스트 불투명도 조정 */
+            margin-bottom: 1rem; /* 아래 여백 추가 */
+        }
+
+        /* 애니메이션: 페이드 인 효과 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0; /* 시작 시 불투명도 0 */
+                transform: translateY(20px); /* 아래에서 위로 올라오는 효과 */
+            }
+            to {
+                opacity: 1; /* 끝에는 불투명도 1 */
+                transform: translateY(0); /* 원래 위치로 복귀 */
+            }
+        }
+
+        /* 애니메이션을 적용할 요소들 */
+        .product-card, .faq-item, .contact-form {
+            animation: fadeIn 0.6s ease-out; /* 'fadeIn' 애니메이션을 0.6초 동안 부드럽게 실행 */
+        }
+
+        /* 태블릿 화면 (최대 너비 768px)에서의 스타일 */
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2개의 열로 표시 */
+            }
+
+            .header h1 {
+                font-size: 2.5rem; /* 헤더 텍스트 크기 조정 */
+            }
+        }
+
+        /* 모바일 화면 (최대 너비 480px)에서의 스타일 */
+        @media (max-width: 480px) {
+            .nav-list {
+                flex-direction: column; /* 네비게이션 메뉴를 세로로 정렬 */
+                align-items: center; /* 메뉴 항목들을 중앙 정렬 */
+                gap: 1rem; /* 항목 간의 간격 */
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr; /* 1개의 열로 표시 */
+            }
+
+            section {
+                padding: 4rem 1rem; /* 섹션 패딩 조정 */
+            }
+
+            .header h1 {
+                font-size: 2rem; /* 헤더 텍스트 크기 조정 */
+            }
+
+            .contact-form {
+                padding: 1.5rem; /* 연락처 폼 패딩 조정 */
+            }
+        }
+    </style> <!-- 스타일 시트 종료 -->
+</head> <!-- head 태그 종료 -->
+<body> <!-- body 태그 시작 -->
+
+    <!-- 헤더 섹션 -->
+    <header class="header">
+        <h1>ASSANOMDLE</h1> <!-- 메인 제목 -->
+        <p>아싸놈들의 유쾌한 반란이 시작된다</p> <!-- 부제목 -->
+    </header>
+
+    <!-- 내비게이션 메뉴 -->
+    <nav class="nav">
+        <ul class="nav-list"> <!-- 메뉴 항목 목록 -->
+            <li><a href="#home">HOME</a></li>
+            <li><a href="#about">ABOUT</a></li>
+            <li><a href="#products">PRODUCTS</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <!-- About 섹션 -->
+    <section id="about" class="about">
+        <h2 class="section-title">About Us</h2> <!-- 섹션 제목 -->
+        <div class="about-content">
+            <p>혁신적인 기술과 창의적인 솔루션으로 미래를 만들어갑니다.</p>
+            <p>최고의 전문가들과 함께 당신의 비즈니스를 성장시켜 드립니다.</p>
+        </div>
+    </section>
+
+    <!-- Products 섹션 -->
+    <section id="products" class="products">
+        <h2 class="section-title">Our Products</h2> <!-- 섹션 제목 -->
+        <div class="product-grid">
+            <!-- 제품 카드 1 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="jjj123.jpg" alt="Smart Solution Image" />
+                </div>
+                <h3>Smart Solution</h3>
+                <p>AI 기반의 스마트한 비즈니스 솔루션으로 효율성을 극대화합니다.</p>
+                <button class="btn">자세히 보기</button>
+            </div>
+            <!-- 제품 카드 2 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="chicken123.jpg" alt="Cloud Platform Image" />
+                </div>
+                <h3>Cloud Platform</h3>
+                <p>안정적이고 확장 가능한 클라우드 플랫폼을 제공합니다.</p>
+                <button class="btn">자세히 보기</button>
+            </div>
+            <!-- 제품 카드 3 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="jjj123.jpg" alt="Security Service Image" />
+                </div>
+                <h3>Security Service</h3>
+                <p>최고 수준의 보안 서비스로 귀사의 데이터를 안전하게 보호합니다.</p>
+                <button class="btn">자세히 보기</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ 섹션 -->
+    <section id="faq" class="faq">
+        <h2 class="section-title">FAQ</h2> <!-- 섹션 제목 -->
+        <div class="faq-item">
+            <h3>Q: 서비스 도입 과정이 궁금합니다.</h3>
+            <p>A: 상담부터 도입, 사후관리까지 전문가 전보규가 끝까지 책임집니다.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Q: 기술 지원 범위는 어떻게 되나요?</h3>
+            <p>A: 24/7 실시간 기술 지원 및 정기적인 업데이트를 제공합니다.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Q: 맞춤형 솔루션 개발이 가능한가요?</h3>
+            <p>A: 귀사의 요구사항에 맞는 최적화된 솔루션을 개발해 드립니다.</p>
+        </div>
+    </section>
+
+    <!-- Contact 섹션 -->
+    <section id="contact" class="contact">
+        <h2 class="section-title">Contact Us</h2> <!-- 섹션 제목 -->
+        <form class="contact-form"> <!-- 연락처 양식 -->
+            <div class="form-group">
+                <label for="name">이름</label>
+                <input type="text" id="name" required placeholder="이름을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" required placeholder="이메일을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label for="message">문의내용</label>
+                <textarea id="message" rows="5" required placeholder="문의하실 내용을 입력하세요"></textarea>
+            </div>
+            <button type="submit" class="btn">문의하기</button>
+        </form>
+    </section>
+
+    <!-- 푸터 섹션 -->
+    <footer class="footer">
+        <p>서울특별시 강동구 샛별</p> <!-- 회사 주소 -->
+        <p>Tel: 010-8242-2335 | Email: contact@ASSANOMDLE.com</p> <!-- 연락처 -->
+        <p>&copy; 2024 ASSANOMDLE. All rights reserved.</p> <!-- 저작권 정보 -->
+    </footer>
+
+</body> <!-- body 태그 종료 -->
+</html> <!-- HTML 문서 종료 -->
